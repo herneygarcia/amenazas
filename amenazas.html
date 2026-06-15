@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amenazas — William Ospina</title>
+    <style>
+        /* ============================================
+           VARIABLES Y RESET
+           ============================================ */
+        :root {
+            --negro: #0a0a0a;
+            --negro-claro: #1a1a1a;
+            --gris: #333333;
+            --gris-claro: #bdc3c7;
+            --acero: #7f8c8d;
+            --ambre: #f39c12;
+            --sangre: #c0392b;
+            --sangre-oscuro: #2c0b0e;
+            --blanco: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--negro);
+            color: var(--blanco);
+            font-family: 'Georgia', 'Times New Roman', serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ============================================
+           SECCIÓN 1: LA ESCENA (ENCUENTRO)
+           Fondo más tenue para ver los elementos
+           ============================================ */
+        .escena {
+            width: 100%;
+            min-height: auto;
+            padding: 10vh 0 4vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: 
+                radial-gradient(ellipse at 30% 50%, rgba(26, 26, 26, 0.9) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(40, 30, 30, 0.5) 0%, transparent 50%),
+                linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 50%, #0a0a0a 100%);
+            overflow: hidden;
+        }
+
+        /* Neblina sutil para atmósfera */
+        .escena::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 50% 80%, rgba(192, 57, 43, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .titulo {
+            position: absolute;
+            top: 4vh;
+            font-size: 2.8rem;
+            letter-spacing: 0.35em;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-weight: 700;
+            text-shadow: 0 0 30px rgba(192,57,43,0.6), 0 2px 8px rgba(0,0,0,0.8);
+            opacity: 0;
+            animation: aparecer 2s ease forwards 0.5s;
+            z-index: 10;
+        }
+
+        .contenedor-duelo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 3rem;
+            width: 90%;
+            max-width: 980px;
+            height: auto;
+            position: relative;
+            padding: 0 2rem;
+            margin-top: 12vh;
+            z-index: 10;
+        }
+
+        /* --- Imagen Pantera Realista --- */
+        .pantera {
+            width: 58%;
+            max-width: 540px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+            z-index: 10;
+        }
+
+        .pantera:hover {
+            transform: scale(1.08) translateY(-5px);
+        }
+
+        .pantera img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            filter: brightness(0.85) contrast(1.15);
+            transition: all 0.4s ease;
+            box-shadow: 0 0 40px rgba(243, 156, 18, 0.15);
+            display: block;
+        }
+
+        .pantera:hover img {
+            filter: brightness(1) contrast(1.25);
+            box-shadow: 0 0 60px rgba(243, 156, 18, 0.3);
+        }
+
+        .burbuja-pantera {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            background: var(--sangre);
+            color: var(--blanco);
+            padding: 14px 28px;
+            border-radius: 20px 20px 20px 5px;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .burbuja-pantera::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 20px;
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: var(--sangre) transparent transparent;
+        }
+
+        .pantera:hover .burbuja-pantera,
+        .pantera.tocada .burbuja-pantera {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+        }
+
+        /* --- Imagen Espada Realista y Brillante --- */
+        .espada {
+            width: 44%;
+            max-width: 420px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+            z-index: 10;
+        }
+
+        .espada:hover {
+            transform: scale(1.08) rotate(2deg);
+        }
+
+        .espada img {
+            width: 100%;
+            height: auto;
+            filter: brightness(1.2) contrast(1.3) drop-shadow(0 0 20px rgba(189, 195, 199, 0.4));
+            transition: all 0.4s ease;
+            animation: brillo-espada 3s infinite;
+            display: block;
+        }
+
+        .espada:hover img {
+            filter: brightness(1.4) contrast(1.4) drop-shadow(0 0 40px rgba(189, 195, 199, 0.7));
+        }
+
+        .burbuja-espada {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            background: var(--acero);
+            color: var(--negro);
+            padding: 14px 28px;
+            border-radius: 5px;
+            font-family: Georgia, serif;
+            font-weight: bold;
+            font-style: italic;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .burbuja-espada::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 20px;
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: var(--acero) transparent transparent;
+        }
+
+        .espada:hover .burbuja-espada,
+        .espada.tocada .burbuja-espada {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+        }
+
+        /* --- Indicador de clic --- */
+        .indicador-clic {
+            position: absolute;
+            bottom: 8vh;
+            font-size: 0.7rem;
+            color: var(--gris);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            animation: pulsar 2s infinite;
+            cursor: pointer;
+            background: none;
+            border: 1px solid var(--gris);
+            padding: 12px 35px;
+            border-radius: 30px;
+            color: var(--gris-claro);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .indicador-clic:hover {
+            border-color: var(--ambre);
+            color: var(--ambre);
+            box-shadow: 0 0 25px rgba(243, 156, 18, 0.2);
+        }
+
+        /* --- Flash y overlay de colisión --- */
+        .flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--blanco);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .flash.activo {
+            animation: flash-anim 0.4s ease forwards;
+        }
+
+        .overlay-final {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--sangre-oscuro);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 500;
+            transition: opacity 1.5s ease;
+            padding: 2rem;
+        }
+
+        .overlay-final.activo {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .escena-final {
+            position: relative;
+            width: 350px;
+            max-width: 90%;
+            height: auto;
+            margin-bottom: 3rem;
+            opacity: 0.7;
+        }
+
+        .escena-final img {
+            width: 100%;
+            border-radius: 12px;
+            filter: grayscale(0.6) brightness(0.4) sepia(0.3);
+        }
+
+        .texto-microrelato {
+            text-align: center;
+            font-size: 1.6rem;
+            line-height: 2.4;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease 0.5s;
+        }
+
+        .overlay-final.activo .texto-microrelato {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .texto-microrelato .dialogo {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .texto-microrelato .autor {
+            display: block;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--gris-claro);
+            font-style: italic;
+        }
+
+        .btn-reflexion {
+            margin-top: 3rem;
+            padding: 14px 40px;
+            background: transparent;
+            border: 1px solid var(--gris-claro);
+            color: var(--gris-claro);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .overlay-final.activo .btn-reflexion {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 1.5s;
+        }
+
+        .btn-reflexion:hover {
+            border-color: var(--ambre);
+            color: var(--ambre);
+            box-shadow: 0 0 30px rgba(243, 156, 18, 0.15);
+        }
+
+        /* --- Partículas --- */
+        .particulas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particula {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: caer linear infinite;
+        }
+
+        /* ============================================
+           CONTROLES DE AUDIO
+           ============================================ */
+        .audio-control {
+            position: absolute;
+            top: 5vh;
+            right: 5vh;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            color: var(--gris-claro);
+        }
+
+        .audio-control:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--ambre);
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.2);
+        }
+
+        .audio-control.muted {
+            opacity: 0.5;
+        }
+
+        /* ============================================
+           SECCIÓN 2: REFLEXIÓN INTERACTIVA
+           ============================================ */
+        .seccion-reflexion {
+            width: 100%;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--sangre-oscuro) 0%, var(--negro) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .seccion-reflexion::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 80px;
+            background: linear-gradient(180deg, transparent, var(--sangre), transparent);
+        }
+
+        .titulo-reflexion {
+            font-size: 0.75rem;
+            letter-spacing: 0.5em;
+            color: var(--gris);
+            text-transform: uppercase;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin-bottom: 4rem;
+            margin-top: 2rem;
+        }
+
+        .contenedor-analisis {
+            max-width: 700px;
+            width: 100%;
+            margin-bottom: 5rem;
+        }
+
+        .tarjeta-tema {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tarjeta-tema::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--sangre);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tarjeta-tema:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+        }
+
+        .tarjeta-tema:hover::before {
+            opacity: 1;
+        }
+
+        .tarjeta-tema.activa {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(192, 57, 43, 0.3);
+        }
+
+        .tarjeta-tema.activa::before {
+            opacity: 1;
+        }
+
+        .tema-titulo {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gris-claro);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tema-icono {
+            font-size: 1.2rem;
+        }
+
+        .tema-texto {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.7);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+        }
+
+        .tarjeta-tema.activa .tema-texto {
+            max-height: 400px;
+            opacity: 1;
+            margin-top: 1rem;
+        }
+
+        .indicador-expandir {
+            position: absolute;
+            right: 2rem;
+            top: 2rem;
+            font-size: 1.2rem;
+            color: var(--gris);
+            transition: transform 0.3s ease;
+        }
+
+        .tarjeta-tema.activa .indicador-expandir {
+            transform: rotate(45deg);
+            color: var(--sangre);
+        }
+
+        /* --- Zona de participación del lector --- */
+        .zona-participacion {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .zona-participacion::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 30px;
+            font-size: 6rem;
+            color: var(--sangre);
+            opacity: 0.2;
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .pregunta-central {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: rgba(255, 255, 255, 0.85);
+            font-style: italic;
+        }
+
+        .area-texto {
+            width: 100%;
+            min-height: 150px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            color: var(--blanco);
+            font-family: Georgia, serif;
+            font-size: 1rem;
+            line-height: 1.8;
+            resize: vertical;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .area-texto::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+            font-style: italic;
+        }
+
+        .area-texto:focus {
+            border-color: var(--sangre);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 20px rgba(192, 57, 43, 0.1);
+        }
+
+        .controles-envio {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .contador-caracteres {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.75rem;
+            color: var(--gris);
+            letter-spacing: 0.1em;
+        }
+
+        .btn-enviar {
+            padding: 12px 36px;
+            background: var(--sangre);
+            color: var(--blanco);
+            border: none;
+            border-radius: 30px;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-enviar:hover {
+            background: #a93226;
+            box-shadow: 0 0 25px rgba(192, 57, 43, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-enviar:disabled {
+            background: var(--gris);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* --- Respuesta tras enviar --- */
+        .mensaje-confirmacion {
+            text-align: center;
+            padding: 3rem 2rem;
+            display: none;
+        }
+
+        .mensaje-confirmacion.visible {
+            display: block;
+            animation: aparecer 1s ease;
+        }
+
+        .icono-confirmacion {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .texto-confirmacion {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .texto-confirmacion strong {
+            color: var(--ambre);
+        }
+
+        /* --- Reflexiones de otros lectores --- */
+        .muro-reflexiones {
+            max-width: 700px;
+            width: 100%;
+            margin-top: 4rem;
+        }
+
+        .subtitulo-muro {
+            font-size: 0.75rem;
+            letter-spacing: 0.4em;
+            color: var(--gris);
+            text-transform: uppercase;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .reflexion-ajena {
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 2px solid var(--ambre);
+            padding: 1.5rem 2rem;
+            margin-bottom: 1rem;
+            border-radius: 0 10px 10px 0;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: aparecer-lateral 0.8s ease forwards;
+        }
+
+        .reflexion-ajena:nth-child(2) { animation-delay: 0.2s; }
+        .reflexion-ajena:nth-child(3) { animation-delay: 0.4s; }
+        .reflexion-ajena:nth-child(4) { animation-delay: 0.6s; }
+
+        .reflexion-texto {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.65);
+            font-style: italic;
+        }
+
+        .reflexion-autor {
+            font-size: 0.75rem;
+            color: var(--gris);
+            margin-top: 0.8rem;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            letter-spacing: 0.1em;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            width: 100%;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: var(--negro);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-texto {
+            font-size: 0.75rem;
+            color: var(--gris);
+            letter-spacing: 0.2em;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        /* ============================================
+           ANIMACIONES KEYFRAMES
+           ============================================ */
+        @keyframes brillo-espada {
+            0%, 100% { filter: brightness(1.2) contrast(1.3) drop-shadow(0 0 20px rgba(189, 195, 199, 0.4)); }
+            50% { filter: brightness(1.3) contrast(1.4) drop-shadow(0 0 35px rgba(189, 195, 199, 0.6)); }
+        }
+
+        @keyframes pulsar {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        @keyframes flash-anim {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes aparecer {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes aparecer-lateral {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes caer {
+            0% { transform: translateY(-10px) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(100vh) translateX(20px); opacity: 0; }
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 768px) {
+            .contenedor-duelo {
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: auto;
+                gap: 3rem;
+                padding-top: 4rem;
+            }
+
+            .pantera { width: 70%; max-width: 300px; }
+            .espada { width: 50%; max-width: 200px; }
+
+            .texto-microrelato {
+                font-size: 1.1rem;
+                padding: 0 1rem;
+            }
+
+            .zona-participacion {
+                padding: 2rem 1.5rem;
+            }
+
+            .pregunta-central {
+                font-size: 1.1rem;
+            }
+
+            .tarjeta-tema {
+                padding: 1.5rem;
+            }
+
+            .audio-control {
+                top: 3vh;
+                right: 3vh;
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================
+         SECCIÓN 1: LA ESCENA
+         ============================================ -->
+    <section class="escena" id="escena" aria-label="Escena del microrelato Amenazas">
+        <h1 class="titulo">Amenazas</h1>
+
+        <!-- Control de audio (Web Audio API - generado en JS) -->
+        <div class="audio-control" id="audio-control" onclick="toggleAudio()" title="Activar/Desactivar sonido de suspenso">
+            🔇
+        </div>
+
+        <div class="contenedor-duelo">
+            <!-- Pantera -->
+            <div class="pantera" id="pantera" role="button" aria-label="Pantera">
+                <div class="burbuja-pantera">Alimento</div>
+                <img src="pantera.png" alt="Pantera negra con ojos brillantes en la oscuridad" loading="eager">
+            </div>
+
+            <!-- Espada -->
+            <div class="espada" id="espada" role="button" aria-label="Espada">
+                <div class="burbuja-espada">Venganza</div>
+                <img src="espada.png" alt="Espada medieval de acero brillante" loading="eager">
+            </div>
+        </div>
+
+        <!-- Flash de colisión -->
+        <div class="flash" id="flash" aria-hidden="true"></div>
+
+        <!-- Overlay final -->
+        <div class="overlay-final" id="overlay-final">
+            <div class="particulas" id="particulas-final"></div>
+            <div class="escena-final">
+                <img src="pantera.png" alt="Pantera caída" style="filter: grayscale(0.6) brightness(0.4) sepia(0.3);">
+            </div>
+            <div class="texto-microrelato">
+                <span class="dialogo">—Te devoraré —dijo la pantera.</span>
+                <span class="dialogo">—Peor para ti —dijo la espada.</span>
+                <span class="autor">
+                    <a href="https://es.wikipedia.org/wiki/William_Ospina" target="_blank" rel="noopener" style="color: inherit; text-decoration: none; border-bottom: 1px dotted rgba(189,195,199,0.5);">William Ospina</a>
+                </span>
+            </div>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:3rem;">
+                <button class="btn-reflexion" id="btn-reflexion" onclick="window.location.href='reflexion.html'">
+                    Desenlace, análisis y reflexión
+                </button>
+                <button class="btn-reflexion" onclick="reiniciar()" style="border-color:#7f8c8d;color:#bdc3c7;">
+                    ↑ Volver al inicio
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         FOOTER
+         ============================================ -->
+    <footer class="footer">
+        <p class="footer-texto">Microrelato de William Ospina · Experiencia interactiva</p>
+        <p style="margin-top:1rem;">
+            <a href="reflexion.html" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:0.75rem;letter-spacing:0.25em;text-transform:uppercase;color:#bdc3c7;text-decoration:none;border-bottom:1px dotted rgba(189,195,199,0.35);transition:color 0.3s,border-color 0.3s;" onmouseover="this.style.color='#f39c12';this.style.borderColor='#f39c12'" onmouseout="this.style.color='#bdc3c7';this.style.borderColor='rgba(189,195,199,0.35)'">
+                Desenlace, análisis y reflexión →
+            </a>
+        </p>
+    </footer>
+
+    <!-- ============================================
+         JAVASCRIPT
+         ============================================ -->
+    <script>
+        // ==========================================
+        // GENERADOR DE SONIDO DE SUSPENSO (Web Audio API)
+        // ==========================================
+        let audioContext = null;
+        let osciladores = [];
+        let gainNodes = [];
+        let audioActivo = false;
+
+        function crearSonidoSuspenso() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            // Detener sonidos previos
+            detenerSonido();
+
+            // Crear múltiples osciladores para efecto de drone
+            const frecuencias = [55, 82, 110, 164]; // Notas graves (A1, E2, A2, E3)
+
+            frecuencias.forEach((freq, index) => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                const filter = audioContext.createBiquadFilter();
+
+                osc.type = index % 2 === 0 ? 'sine' : 'triangle';
+                osc.frequency.value = freq;
+
+                // Filtro pasa-bajos para suavizar
+                filter.type = 'lowpass';
+                filter.frequency.value = 200 + (index * 50);
+                filter.Q.value = 5;
+
+                // Ganancia muy baja para ambiente sutil
+                gain.gain.value = 0.015;
+
+                // LFO para modulación sutil
+                const lfo = audioContext.createOscillator();
+                const lfoGain = audioContext.createGain();
+                lfo.type = 'sine';
+                lfo.frequency.value = 0.1 + (index * 0.05); // Muy lento
+                lfoGain.gain.value = 20;
+                lfo.connect(lfoGain);
+                lfoGain.connect(filter.frequency);
+                lfo.start();
+
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioContext.destination);
+                osc.start();
+
+                osciladores.push(osc, lfo);
+                gainNodes.push(gain, lfoGain);
+            });
+
+            // Añadir ruido rojo sutil para textura
+            const bufferSize = audioContext.sampleRate * 2;
+            const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * 0.02;
+            }
+            const noise = audioContext.createBufferSource();
+            noise.buffer = buffer;
+            noise.loop = true;
+            const noiseGain = audioContext.createGain();
+            noiseGain.gain.value = 0.01;
+            const noiseFilter = audioContext.createBiquadFilter();
+            noiseFilter.type = 'lowpass';
+            noiseFilter.frequency.value = 100;
+            noise.connect(noiseFilter);
+            noiseFilter.connect(noiseGain);
+            noiseGain.connect(audioContext.destination);
+            noise.start();
+
+            osciladores.push(noise);
+            gainNodes.push(noiseGain);
+        }
+
+        function detenerSonido() {
+            osciladores.forEach(osc => {
+                try { osc.stop(); } catch(e) {}
+            });
+            osciladores = [];
+            gainNodes = [];
+        }
+
+        function toggleAudio() {
+            const control = document.getElementById('audio-control');
+            if (!audioActivo) {
+                crearSonidoSuspenso();
+                audioActivo = true;
+                control.textContent = '🔊';
+                control.classList.remove('muted');
+            } else {
+                detenerSonido();
+                audioActivo = false;
+                control.textContent = '🔇';
+                control.classList.add('muted');
+            }
+        }
+
+        // Intentar audio automático; si el navegador lo bloquea,
+        // arranca en el primer gesto del usuario
+        function iniciarAudioAuto() {
+            const control = document.getElementById('audio-control');
+            crearSonidoSuspenso();
+            if (audioContext && audioContext.state === 'running') {
+                audioActivo = true;
+                control.textContent = '🔊';
+                control.classList.remove('muted');
+            } else {
+                // Esperar primer gesto
+                const arrancar = () => {
+                    if (!audioActivo) {
+                        if (audioContext) audioContext.resume();
+                        crearSonidoSuspenso();
+                        audioActivo = true;
+                        control.textContent = '🔊';
+                        control.classList.remove('muted');
+                    }
+                    document.removeEventListener('click', arrancar);
+                    document.removeEventListener('keydown', arrancar);
+                };
+                document.addEventListener('click', arrancar);
+                document.addEventListener('keydown', arrancar);
+            }
+        }
+
+        window.addEventListener('load', iniciarAudioAuto);
+
+        // ==========================================
+        // GESTIÓN DE LA COLISIÓN
+        // ==========================================
+        const flash = document.getElementById('flash');
+        const overlayFinal = document.getElementById('overlay-final');
+        const escena = document.getElementById('escena');
+
+        function activarColision() {
+            if (audioActivo) {
+                detenerSonido();
+                audioActivo = false;
+                document.getElementById('audio-control').textContent = '🔇';
+                document.getElementById('audio-control').classList.add('muted');
+            }
+            flash.classList.add('activo');
+            setTimeout(() => {
+                overlayFinal.classList.add('activo');
+                crearParticulas();
+                setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 100);
+            }, 400);
+        }
+
+        // Clic en las imágenes o en la escena activa el desenlace
+        document.getElementById('pantera').addEventListener('click', activarColision);
+        document.getElementById('espada').addEventListener('click', activarColision);
+        escena.addEventListener('click', function(e) {
+            if (e.target === escena || e.target.classList.contains('contenedor-duelo')) {
+                activarColision();
+            }
+        });
+
+        // ==========================================
+        // PARTÍCULAS
+        // ==========================================
+        function crearParticulas() {
+            const contenedor = document.getElementById('particulas-final');
+            for (let i = 0; i < 30; i++) {
+                const p = document.createElement('div');
+                p.className = 'particula';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDuration = (8 + Math.random() * 7) + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                p.style.width = (1 + Math.random() * 2) + 'px';
+                p.style.height = p.style.width;
+                contenedor.appendChild(p);
+            }
+        }
+
+        // ==========================================
+        // TEMAS EXPANDIBLES
+        // ==========================================
+        function toggleTema(elemento) {
+            document.querySelectorAll('.tarjeta-tema').forEach(t => {
+                if (t !== elemento) t.classList.remove('activa');
+            });
+            elemento.classList.toggle('activa');
+        }
+
+        // ==========================================
+        // FORMULARIO DE REFLEXIÓN
+        // ==========================================
+        const textarea = document.getElementById('texto-lector');
+        const contador = document.getElementById('contador');
+        const btnEnviar = document.getElementById('btn-enviar');
+        const formulario = document.getElementById('formulario-reflexion');
+        const confirmacion = document.getElementById('mensaje-confirmacion');
+
+        textarea.addEventListener('input', function() {
+            const longitud = this.value.length;
+            contador.textContent = longitud + ' / 800';
+
+            if (longitud > 0) {
+                btnEnviar.disabled = false;
+                contador.style.color = longitud > 700 ? '#c0392b' : '#bdc3c7';
+            } else {
+                btnEnviar.disabled = true;
+            }
+        });
+
+        btnEnviar.disabled = true;
+
+        function enviarReflexion() {
+            const texto = textarea.value.trim();
+            if (texto.length === 0) return;
+
+            btnEnviar.textContent = 'Enviando...';
+            btnEnviar.disabled = true;
+
+            setTimeout(() => {
+                formulario.style.display = 'none';
+                confirmacion.classList.add('visible');
+
+                const muro = document.querySelector('.muro-reflexiones');
+                const nuevaReflexion = document.createElement('div');
+                nuevaReflexion.className = 'reflexion-ajena';
+                nuevaReflexion.style.animationDelay = '0s';
+                nuevaReflexion.innerHTML = `
+                    <p class="reflexion-texto">"${texto}"</p>
+                    <p class="reflexion-autor">— TÚ</p>
+                `;
+                muro.insertBefore(nuevaReflexion, muro.children[1]);
+            }, 1000);
+        }
+
+        // ==========================================
+        // REINICIAR EXPERIENCIA
+        // ==========================================
+        function reiniciar() {
+            overlayFinal.classList.remove('activo');
+            flash.classList.remove('activo');
+            document.getElementById('particulas-final').innerHTML = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ==========================================
+        // SOPORTE TÁCTIL PARA MÓVILES
+        // ==========================================
+        const pantera = document.getElementById('pantera');
+        const espada = document.getElementById('espada');
+
+        pantera.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.classList.add('tocada');
+            setTimeout(() => this.classList.remove('tocada'), 2000);
+        });
+
+        espada.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.classList.add('tocada');
+            setTimeout(() => this.classList.remove('tocada'), 2000);
+        });
+    </script>
+</body>
+</html>

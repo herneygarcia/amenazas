@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflexión — Amenazas de William Ospina</title>
+    <style>
+        :root {
+            --negro: #0a0a0a;
+            --negro-claro: #1a1a1a;
+            --gris: #888888;
+            --gris-claro: #e0e4e7;
+            --acero: #a0aaac;
+            --ambre: #f5a623;
+            --sangre: #e04030;
+            --sangre-oscuro: #2c0b0e;
+            --blanco: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--negro);
+            color: var(--blanco);
+            font-family: 'Georgia', 'Times New Roman', serif;
+            min-height: 100vh;
+        }
+
+        /* ── NAV ── */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            background: rgba(10,10,10,0.95);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.82rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover { color: var(--ambre); }
+        .nav-sep { color: var(--gris); font-size: 0.8rem; }
+
+        /* ── HERO ── */
+        .hero {
+            background: linear-gradient(180deg, #1a0a0a 0%, var(--negro) 100%);
+            padding: 5rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(192,57,43,0.12) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .etiqueta {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.82rem;
+            letter-spacing: 0.4em;
+            color: var(--gris-claro);
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .microrelato-display {
+            max-width: 540px;
+            margin: 0 auto 3rem;
+            border-left: 2px solid var(--sangre);
+            padding: 1.5rem 2rem;
+            text-align: left;
+            background: rgba(192,57,43,0.04);
+            border-radius: 0 10px 10px 0;
+        }
+
+        .microrelato-display p {
+            font-size: 1.35rem;
+            line-height: 2.2;
+            font-style: italic;
+            color: #ffffff;
+        }
+
+        .microrelato-display .firma {
+            margin-top: 1.2rem;
+            font-size: 0.9rem;
+            font-style: normal;
+            color: var(--gris-claro);
+            letter-spacing: 0.1em;
+        }
+
+        .microrelato-display .firma a {
+            color: var(--ambre);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(243,156,18,0.3);
+            transition: border-color 0.3s;
+        }
+
+        .microrelato-display .firma a:hover {
+            border-color: var(--ambre);
+        }
+
+        /* ── CUERPO ── */
+        .contenido {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        /* ── AUTOR ── */
+        .bloque-autor {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .autor-foto-placeholder {
+            flex-shrink: 0;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--sangre-oscuro), var(--gris));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            border: 2px solid rgba(192,57,43,0.3);
+        }
+
+        .autor-info h2 {
+            font-size: 1.2rem;
+            font-weight: normal;
+            color: var(--ambre);
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.05em;
+        }
+
+        .autor-info p {
+            font-size: 0.97rem;
+            line-height: 1.75;
+            color: rgba(255,255,255,0.88);
+            font-style: italic;
+        }
+
+        .autor-info a {
+            color: var(--ambre);
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(243,156,18,0.5);
+            font-style: normal;
+            font-size: 0.84rem;
+            letter-spacing: 0.1em;
+        }
+
+        .autor-info a:hover { border-bottom-style: solid; }
+
+        /* ── ANÁLISIS ── */
+        .seccion-titulo {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 0.08em;
+            color: #ffffff;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+            margin-bottom: 1.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid rgba(224,64,48,0.6);
+        }
+
+        .analisis-cuerpo {
+            margin-bottom: 3rem;
+        }
+
+        .analisis-cuerpo p {
+            font-size: 1.08rem;
+            line-height: 2;
+            color: rgba(255,255,255,0.93);
+            margin-bottom: 1.4rem;
+        }
+
+        .analisis-cuerpo p:first-of-type::first-letter {
+            font-size: 3rem;
+            float: left;
+            line-height: 0.75;
+            margin-right: 0.12em;
+            color: var(--sangre);
+            font-style: italic;
+        }
+
+        .frase-destacada {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: #ffffff;
+            border-left: 3px solid var(--ambre);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            background: rgba(243,156,18,0.08);
+            border-radius: 0 10px 10px 0;
+        }
+
+        /* ── PILARES TEMÁTICOS ── */
+        .pilares {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 560px) { .pilares { grid-template-columns: 1fr; } }
+
+        .pilar {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 12px;
+            padding: 1.4rem;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .pilar:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(192,57,43,0.3);
+        }
+
+        .pilar-icono { font-size: 1.5rem; margin-bottom: 0.6rem; display: block; }
+
+        .pilar-titulo {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .pilar p {
+            font-size: 0.93rem;
+            line-height: 1.75;
+            color: rgba(255,255,255,0.85);
+        }
+
+        /* ── ESPACIO DE INTERACCIÓN ── */
+        .zona-interaccion {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .zona-interaccion::before {
+            content: '"';
+            position: absolute;
+            top: -15px;
+            left: 25px;
+            font-size: 7rem;
+            color: var(--sangre);
+            opacity: 0.12;
+            font-family: Georgia, serif;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .zona-interaccion h3 {
+            font-size: 1.2rem;
+            font-weight: normal;
+            font-style: italic;
+            color: #ffffff;
+            margin-bottom: 0.6rem;
+            line-height: 1.75;
+        }
+
+        .zona-interaccion .sub {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.88rem;
+            color: var(--gris-claro);
+            letter-spacing: 0.08em;
+            margin-bottom: 1.8rem;
+        }
+
+        .area-texto {
+            width: 100%;
+            min-height: 140px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 1.2rem 1.4rem;
+            color: var(--blanco);
+            font-family: Georgia, serif;
+            font-size: 0.97rem;
+            line-height: 1.85;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+        }
+
+        .area-texto::placeholder {
+            color: rgba(255,255,255,0.28);
+            font-style: italic;
+        }
+
+        .area-texto:focus {
+            border-color: var(--sangre);
+            background: rgba(255,255,255,0.05);
+            box-shadow: 0 0 20px rgba(192,57,43,0.1);
+        }
+
+        .fila-envio {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.2rem;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .contador {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.82rem;
+            color: var(--gris-claro);
+            letter-spacing: 0.08em;
+            transition: color 0.3s;
+        }
+
+        .btn-enviar {
+            padding: 11px 34px;
+            background: var(--sangre);
+            color: var(--blanco);
+            border: none;
+            border-radius: 30px;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.78rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+        }
+
+        .btn-enviar:hover:not(:disabled) {
+            background: #a93226;
+            box-shadow: 0 0 25px rgba(192,57,43,0.35);
+            transform: translateY(-2px);
+        }
+
+        .btn-enviar:disabled {
+            background: var(--gris);
+            cursor: not-allowed;
+        }
+
+        /* ── MURO DE VOCES ── */
+        .muro { margin-bottom: 3rem; }
+
+        .muro-titulo {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.82rem;
+            letter-spacing: 0.35em;
+            color: var(--gris-claro);
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .voz {
+            background: rgba(255,255,255,0.02);
+            border-left: 2px solid var(--ambre);
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 0.9rem;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .voz p {
+            font-size: 0.97rem;
+            line-height: 1.85;
+            color: rgba(255,255,255,0.88);
+            font-style: italic;
+        }
+
+        .voz-firma {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.78rem;
+            color: var(--gris-claro);
+            margin-top: 0.6rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* ── CONFIRMACIÓN ── */
+        .confirmacion {
+            display: none;
+            text-align: center;
+            padding: 2rem 1rem;
+            animation: aparecer 0.8s ease;
+        }
+
+        .confirmacion.visible { display: block; }
+
+        .confirmacion .simbolo { font-size: 2.5rem; margin-bottom: 1rem; }
+
+        .confirmacion p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.75);
+        }
+
+        .confirmacion strong { color: var(--ambre); }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.82rem;
+            color: var(--gris-claro);
+            letter-spacing: 0.18em;
+            margin-bottom: 0.6rem;
+        }
+
+        footer a {
+            color: var(--gris-claro);
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(224,228,231,0.5);
+            transition: color 0.3s, border-color 0.3s;
+        }
+
+        footer a:hover { color: var(--ambre); border-color: var(--ambre); }
+
+        .sep-footer { margin: 0 0.6rem; color: var(--gris); }
+
+        @keyframes aparecer {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav class="nav">
+        <a href="amenazas.html">← Volver a la experiencia</a>
+        <span class="nav-sep">·</span>
+        <a href="#interaccion">Deja tu reflexión</a>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+        <h1 style="font-size:2.6rem;font-weight:700;letter-spacing:0.12em;color:#ffffff;text-shadow:0 0 30px rgba(224,64,48,0.55),0 2px 10px rgba(0,0,0,0.8);margin-bottom:0.5rem;font-family:'Helvetica Neue',Arial,sans-serif;text-transform:uppercase;">Amenazas</h1>
+        <p class="etiqueta">Análisis literario · William Ospina</p>
+        <div class="microrelato-display">
+            <p>—Te devoraré —dijo la pantera.</p>
+            <p>—Peor para ti —dijo la espada.</p>
+            <p class="firma">
+                <a href="https://es.wikipedia.org/wiki/William_Ospina" target="_blank" rel="noopener">William Ospina</a>
+            </p>
+        </div>
+    </header>
+
+    <main class="contenido">
+
+        <!-- AUTOR -->
+        <div class="bloque-autor">
+            <div class="autor-foto-placeholder" title="William Ospina">✍</div>
+            <div class="autor-info">
+                <h2>William Ospina</h2>
+                <p>
+                    Escritor colombiano (Padua, Tolima, 1954). Poeta, ensayista y novelista, es reconocido por su capacidad de condensar significado profundo en pocas palabras. Entre sus obras destacan la trilogía sobre la conquista (<em>Ursúa</em>, <em>El País de la Canela</em>, <em>La serpiente sin ojos</em>) y ensayos como <em>¿Dónde está la franja amarilla?</em>.
+                </p>
+                <br>
+                <a href="https://es.wikipedia.org/wiki/William_Ospina" target="_blank" rel="noopener">Ver en Wikipedia ↗</a>
+            </div>
+        </div>
+
+        <!-- ANÁLISIS -->
+        <h2 class="seccion-titulo">Análisis del texto</h2>
+
+        <div class="analisis-cuerpo">
+            <p>
+                ¡Qué joya de economía verbal! En apenas dos líneas de diálogo, Ospina condensa una tragedia ecológica entera. Es un texto muy breve pero con mucha carga simbólica: la pantera habla desde la lógica pura de la naturaleza —el depredador devora la presa—, una amenaza biológica, instintiva, sin malicia. La espada, en cambio, responde desde la lógica de la civilización: no se defiende, no pide piedad, sino que contraataca con una certeza letal.
+            </p>
+
+            <div class="frase-destacada">
+                "Peor para ti" implica que devorarla sería suicidio: la pantera morirá al ingerir metal, o la violencia que la espada representa la consumirá de regreso.
+            </div>
+
+            <p>
+                El giro dramático reside en que cuando la naturaleza se enfrenta a la tecnología humana, la naturaleza sale perdiendo. La espada sabe que si la pantera la devora, la pantera muere. Es una parábola sobre la relación entre naturaleza y civilización: hemos creado armas que garantizan la muerte mutua. Una versión poética de la "destrucción mutua asegurada" aplicada al conflicto hombre-naturaleza.
+            </p>
+
+            <p>
+                También hay ironía trágica: la pantera, al ejercer su derecho natural de alimentarse, se condena. La espada, al ser un objeto inanimado, "sabe" que su victoria es pírrica —sin mano que la empuñe, sin enemigo que combatir, pierde su razón de existir—. En el conflicto entre naturaleza y tecnología, no hay sobrevivientes reales.
+            </p>
+        </div>
+
+        <!-- PILARES TEMÁTICOS -->
+        <h2 class="seccion-titulo">Ejes temáticos</h2>
+
+        <div class="pilares">
+            <div class="pilar">
+                <span class="pilar-icono">🐾</span>
+                <div class="pilar-titulo">Naturaleza vs. Civilización</div>
+                <p>La pantera encarna la fuerza bruta y el instinto; la espada, la tecnología y la violencia humana organizada.</p>
+            </div>
+            <div class="pilar">
+                <span class="pilar-icono">⚔️</span>
+                <div class="pilar-titulo">Violencia que se autodestruye</div>
+                <p>Ambas partes quedan condenadas: la pantera muere al devorar metal; la espada gana una victoria sin sentido.</p>
+            </div>
+            <div class="pilar">
+                <span class="pilar-icono">🏛️</span>
+                <div class="pilar-titulo">Arrogancia de la civilización</div>
+                <p>La espada no siente miedo ni compasión. Representa la frialdad de una tecnología que garantiza destrucción mutua.</p>
+            </div>
+            <div class="pilar">
+                <span class="pilar-icono">💀</span>
+                <div class="pilar-titulo">Muerte mutua asegurada</div>
+                <p>En el enfrentamiento entre naturaleza y tecnología, Ospina sugiere que no hay sobrevivientes verdaderos.</p>
+            </div>
+        </div>
+
+        <!-- ZONA DE INTERACCIÓN -->
+        <div class="zona-interaccion" id="interaccion">
+            <div id="formulario">
+                <h3>La pantera y la espada ya hablaron.<br>Ahora te toca a ti:</h3>
+                <p class="sub">¿Qué sientes al leer este microrelato? ¿Con quién te identificas? No hay respuestas correctas.</p>
+                <textarea
+                    class="area-texto"
+                    id="texto-lector"
+                    maxlength="800"
+                    placeholder="Escribe aquí tu reflexión. ¿Quién crees que ganó realmente? ¿Qué te dice sobre nuestra relación con la naturaleza?..."
+                ></textarea>
+                <div class="fila-envio">
+                    <span class="contador" id="contador">0 / 800</span>
+                    <button class="btn-enviar" id="btn-enviar" disabled onclick="enviar()">Dejar mi reflexión</button>
+                </div>
+            </div>
+
+            <div class="confirmacion" id="confirmacion">
+                <div class="simbolo">✦</div>
+                <p>Tu voz se ha sumado al silencio que dejó este encuentro.<br><strong>Gracias por reflexionar con nosotros.</strong></p>
+            </div>
+        </div>
+
+        <!-- MURO DE VOCES -->
+        <div class="muro">
+            <h3 class="muro-titulo">Otras voces</h3>
+            <div class="voz">
+                <p>"Ganó la muerte. La pantera pierde su vida, la espada pierde su propósito. En la violencia no hay victoria, solo dos formas distintas de desaparición."</p>
+                <p class="voz-firma">— LECTOR ANÓNIMO</p>
+            </div>
+            <div class="voz">
+                <p>"Me identifico con la pantera. A veces sentimos que nuestra supervivencia depende de devorar algo que en realidad nos destruirá."</p>
+                <p class="voz-firma">— LECTOR ANÓNIMO</p>
+            </div>
+            <div class="voz">
+                <p>"La espada me da miedo porque no siente. No tiene miedo, no tiene compasión. Es la tecnología sin alma que hemos creado."</p>
+                <p class="voz-firma">— LECTOR ANÓNIMO</p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>Microrelato de William Ospina · Reflexión literaria</p>
+    </footer>
+
+    <script>
+        const textarea = document.getElementById('texto-lector');
+        const contador = document.getElementById('contador');
+        const btnEnviar = document.getElementById('btn-enviar');
+        const formulario = document.getElementById('formulario');
+        const confirmacion = document.getElementById('confirmacion');
+        const muro = document.querySelector('.muro');
+
+        textarea.addEventListener('input', () => {
+            const n = textarea.value.length;
+            contador.textContent = n + ' / 800';
+            contador.style.color = n > 700 ? '#c0392b' : '#555555';
+            btnEnviar.disabled = n === 0;
+        });
+
+        function enviar() {
+            const texto = textarea.value.trim();
+            if (!texto) return;
+
+            btnEnviar.textContent = 'Guardando...';
+            btnEnviar.disabled = true;
+
+            setTimeout(() => {
+                formulario.style.display = 'none';
+                confirmacion.classList.add('visible');
+
+                const nueva = document.createElement('div');
+                nueva.className = 'voz';
+                nueva.innerHTML = `<p>"${texto}"</p><p class="voz-firma">— TÚ</p>`;
+                muro.insertBefore(nueva, muro.children[1]);
+            }, 800);
+        }
+    </script>
+
+</body>
+</html>
