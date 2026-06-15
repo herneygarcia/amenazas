@@ -388,37 +388,6 @@
             animation: caer linear infinite;
         }
 
-        /* ============================================
-           CONTROLES DE AUDIO
-           ============================================ */
-        .audio-control {
-            position: absolute;
-            top: 5vh;
-            right: 5vh;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-            color: var(--gris-claro);
-        }
-
-        .audio-control:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--ambre);
-            box-shadow: 0 0 15px rgba(243, 156, 18, 0.2);
-        }
-
-        .audio-control.muted {
-            opacity: 0.5;
-        }
 
         /* ============================================
            SECCIÓN 2: REFLEXIÓN INTERACTIVA
@@ -837,12 +806,7 @@
     <section class="escena" id="escena" aria-label="Escena del microrelato Amenazas">
         <h1 class="titulo">Amenazas</h1>
 
-        <!-- Control de audio (Web Audio API - generado en JS) -->
-        <div class="audio-control" id="audio-control" onclick="toggleAudio()" title="Activar/Desactivar sonido de suspenso">
-            🔇
-        </div>
-
-        <div class="contenedor-duelo">
+<div class="contenedor-duelo">
             <!-- Pantera -->
             <div class="pantera" id="pantera" role="button" aria-label="Pantera">
                 <div class="burbuja-pantera">Alimento</div>
@@ -900,136 +864,6 @@
          ============================================ -->
     <script>
         // ==========================================
-        // GENERADOR DE SONIDO DE SUSPENSO (Web Audio API)
-        // ==========================================
-        let audioContext = null;
-        let osciladores = [];
-        let gainNodes = [];
-        let audioActivo = false;
-
-        function crearSonidoSuspenso() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-
-            // Detener sonidos previos
-            detenerSonido();
-
-            // Crear múltiples osciladores para efecto de drone
-            const frecuencias = [55, 82, 110, 164]; // Notas graves (A1, E2, A2, E3)
-
-            frecuencias.forEach((freq, index) => {
-                const osc = audioContext.createOscillator();
-                const gain = audioContext.createGain();
-                const filter = audioContext.createBiquadFilter();
-
-                osc.type = index % 2 === 0 ? 'sine' : 'triangle';
-                osc.frequency.value = freq;
-
-                // Filtro pasa-bajos para suavizar
-                filter.type = 'lowpass';
-                filter.frequency.value = 200 + (index * 50);
-                filter.Q.value = 5;
-
-                // Ganancia muy baja para ambiente sutil
-                gain.gain.value = 0.015;
-
-                // LFO para modulación sutil
-                const lfo = audioContext.createOscillator();
-                const lfoGain = audioContext.createGain();
-                lfo.type = 'sine';
-                lfo.frequency.value = 0.1 + (index * 0.05); // Muy lento
-                lfoGain.gain.value = 20;
-                lfo.connect(lfoGain);
-                lfoGain.connect(filter.frequency);
-                lfo.start();
-
-                osc.connect(filter);
-                filter.connect(gain);
-                gain.connect(audioContext.destination);
-                osc.start();
-
-                osciladores.push(osc, lfo);
-                gainNodes.push(gain, lfoGain);
-            });
-
-            // Añadir ruido rojo sutil para textura
-            const bufferSize = audioContext.sampleRate * 2;
-            const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = (Math.random() * 2 - 1) * 0.02;
-            }
-            const noise = audioContext.createBufferSource();
-            noise.buffer = buffer;
-            noise.loop = true;
-            const noiseGain = audioContext.createGain();
-            noiseGain.gain.value = 0.01;
-            const noiseFilter = audioContext.createBiquadFilter();
-            noiseFilter.type = 'lowpass';
-            noiseFilter.frequency.value = 100;
-            noise.connect(noiseFilter);
-            noiseFilter.connect(noiseGain);
-            noiseGain.connect(audioContext.destination);
-            noise.start();
-
-            osciladores.push(noise);
-            gainNodes.push(noiseGain);
-        }
-
-        function detenerSonido() {
-            osciladores.forEach(osc => {
-                try { osc.stop(); } catch(e) {}
-            });
-            osciladores = [];
-            gainNodes = [];
-        }
-
-        function toggleAudio() {
-            const control = document.getElementById('audio-control');
-            if (!audioActivo) {
-                crearSonidoSuspenso();
-                audioActivo = true;
-                control.textContent = '🔊';
-                control.classList.remove('muted');
-            } else {
-                detenerSonido();
-                audioActivo = false;
-                control.textContent = '🔇';
-                control.classList.add('muted');
-            }
-        }
-
-        // Intentar audio automático; si el navegador lo bloquea,
-        // arranca en el primer gesto del usuario
-        function iniciarAudioAuto() {
-            const control = document.getElementById('audio-control');
-            crearSonidoSuspenso();
-            if (audioContext && audioContext.state === 'running') {
-                audioActivo = true;
-                control.textContent = '🔊';
-                control.classList.remove('muted');
-            } else {
-                // Esperar primer gesto
-                const arrancar = () => {
-                    if (!audioActivo) {
-                        if (audioContext) audioContext.resume();
-                        crearSonidoSuspenso();
-                        audioActivo = true;
-                        control.textContent = '🔊';
-                        control.classList.remove('muted');
-                    }
-                    document.removeEventListener('click', arrancar);
-                    document.removeEventListener('keydown', arrancar);
-                };
-                document.addEventListener('click', arrancar);
-                document.addEventListener('keydown', arrancar);
-            }
-        }
-
-        window.addEventListener('load', iniciarAudioAuto);
-
-        // ==========================================
         // GESTIÓN DE LA COLISIÓN
         // ==========================================
         const flash = document.getElementById('flash');
@@ -1037,12 +871,6 @@
         const escena = document.getElementById('escena');
 
         function activarColision() {
-            if (audioActivo) {
-                detenerSonido();
-                audioActivo = false;
-                document.getElementById('audio-control').textContent = '🔇';
-                document.getElementById('audio-control').classList.add('muted');
-            }
             flash.classList.add('activo');
             setTimeout(() => {
                 overlayFinal.classList.add('activo');
